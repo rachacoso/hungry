@@ -1,0 +1,52 @@
+
+<div class="container">
+
+<div class="row">
+	<div class="col-md-11 col-md-offset-1">
+		<h1>Menu</h1>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-11 col-md-offset-1">
+
+Appetizers
+<ul>
+
+	<% @appitems.each do |item| %>
+		<li> <%= item['name'] %>, <%= item['description'] %>, $<%= sprintf('%.2f', item['price']) %></li>
+	<% end %>
+
+</ul>
+
+Mains
+<ul>
+
+	<% @mainitems.each do |item| %>
+		<li> <%= item['name'] %>, <%= item['description'] %>, $<%= sprintf('%.2f', item['price']) %></li>
+	<% end %>
+
+</ul>
+
+Beverages
+<ul>
+
+	<% @bevitems.each do |item| %>
+		<li> <%= item['name'] %>, <%= item['description'] %>, $<%= sprintf('%.2f', item['price']) %></li>
+	<% end %>
+
+</ul>
+
+
+	</div>
+</div>
+
+
+</div>
+
+
+<script>
+	$("#addDo").validate();
+</script>
+
