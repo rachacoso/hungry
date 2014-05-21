@@ -22,13 +22,36 @@ orders_c = db['orders']
 # end
 
 # class Order
-# 	attr_accessor :total
+# 	attr_accessor :total, :
 # end
 
 # class User
 # 	attr_accessor :first, :last
 # end
 
+# HOMEPAGE
+
+get '/' do
+	erb :home
+end
+
+# VIEW the menu
+get '/menu' do 
+
+	# get items by type
+	@appitems = menuitems_c.find({type: "appetizer"}).sort(:name)
+	@mainitems = menuitems_c.find({type: "main"}).sort(:name)
+	@dessitems = menuitems_c.find({type: "dessert"}).sort(:name)
+	@bevitems = menuitems_c.find({type: "beverage"}).sort(:name)
+
+	@allitems = Hash.new
+	@allitems['Appetizers'] = @appitems
+	@allitems['Mains'] = @mainitems
+	@allitems['Desserts'] = @dessitems
+	@allitems['Beverages'] = @bevitems
+
+	erb :menu
+end
 
 # EDIT the menu
 
@@ -37,7 +60,14 @@ get '/editmenu' do
 	# get items by type
 	@appitems = menuitems_c.find({type: "appetizer"}).sort(:name)
 	@mainitems = menuitems_c.find({type: "main"}).sort(:name)
+	@dessitems = menuitems_c.find({type: "dessert"}).sort(:name)
 	@bevitems = menuitems_c.find({type: "beverage"}).sort(:name)
+
+	@allitems = Hash.new
+	@allitems['Appetizers'] = @appitems
+	@allitems['Mains'] = @mainitems
+	@allitems['Desserts'] = @dessitems
+	@allitems['Beverages'] = @bevitems
 	erb :editmenu
 
 end
@@ -52,7 +82,9 @@ post '/editmenu' do
 	edititem['price'] = wholeprice.to_f
 
 	menuitems_c.save(edititem)
-	redirect to('/editmenu') 
+	
+	redirect_page = '/editmenu' + '#' + params[:type]
+	redirect to( redirect_page ) 
 
 end
 
@@ -76,17 +108,8 @@ end
 get '/deletemenu' do
 
 	menuitems_c.remove("_id" => BSON::ObjectId(params[:itemid]))
-	redirect to('/editmenu') 
-
+	
+	redirect_page = '/editmenu' + '#' + params[:type]
+	redirect to( redirect_page ) 
 end
 
-
-# VIEW the menu
-get '/menu' do 
-
-	# get items by type
-	@appitems = menuitems_c.find({type: "appetizer"}).sort(:name)
-	@mainitems = menuitems_c.find({type: "main"}).sort(:name)
-	@bevitems = menuitems_c.find({type: "beverage"}).sort(:name)
-	erb :menu
-end

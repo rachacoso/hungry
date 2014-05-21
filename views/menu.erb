@@ -1,132 +1,89 @@
 
 <div class="container">
 
-<div class="row">
-	<div class="col-sm-8 col-md-offset-1">
-		<h1>Menu</h1>
-	</div>
-</div>
-
-
-<div class="row">
-	<div class="col-sm-8 col-md-offset-1">
-
-<!-- Appetizers -->
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Appetizers</h3>
+  <div class="row">
+    <div class="col-sm-8 col-md-offset-1">
+      <h1>Menu</h1>
+    </div>
   </div>
-  <div class="panel-body">
-    
-<div class="list-group">
 
-	<% @appitems.each do |item| %>
-	<a href="#" class="list-group-item">
-	<div class="row">
+  <!-- New version -->
+  <div class="row">
+    <div class="col-sm-8 col-md-offset-1">
+      <% @allitems.each do |k, v| %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= k %></h3>
+        </div>
+        <div class="panel-body">
+        
+          <div class="list-group">
 
-	
-	<div class="col-md-3">
-		<h5><%= item['name'] %></h5>
-	</div>
+            <% v.each do |item| %>
+            <a class="list-group-item"  data-toggle="modal" href="#modal_<%= item['_id'] %>">
+              <div class="row">
+                <div class="col-md-3">
+                  <h5><%= item['name'] %></h5>
+                </div>
+                <div class="col-md-7">
+                  <h5><small><%= item['description'] %></small></h5> 
+                </div>
+                <div class="col-md-2 text-right">
+                  <h5>$<%= sprintf('%.2f', item['price']) %></h5>
+                </div>
+              </div>
+            </a>
 
-	<div class="col-md-7">
-		<h5><small><%= item['description'] %></small></h5> 
-	</div>
+            <!-- Order Modal -->
+            <div class="modal fade" id="modal_<%= item['_id'] %>" tabindex="-1" role="dialog" aria-labelledby="modal_<%= item['_id'] %>Label" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modal_<%= item['_id'] %>Label"><%= item['name'] %> </h4>
+                    <h3><small> <%= item['description'] %></small> </h3>
+                  </div>
+                  <form class="form-horizontal" id="addOrder" role="form" action="/addtoorder" method="POST">
+                    <input type="hidden" name="itemid" value="<%= item['_id'] %>">
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="quantity" class="col-sm-6 control-label">Quantity</label>
+                        <div class="col-sm-3">
+                          <select name="quantity" id="quantity" class="form-control input-sm">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                          </select>           
+                        </div>
+                      </div>
+                    </div> <!-- .modal-body -->
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default input-sm" data-dismiss="modal">Cancel</button>
+                      <input type="submit" class="btn btn-primary input-sm" value="Add to Order">
+                    </div>
+                  </form>
+                </div> <!-- .modal-content -->
+              </div> <!-- .modal-dialog .modal-sm -->
+            </div> <!-- .modal .fade -->
+            <!-- Order Modal  /-->
+            <% end %>
 
-	<div class="col-md-2 text-right">
-		<h5>$<%= sprintf('%.2f', item['price']) %></h5>
-	</div>
-	
-   </div>
-	</a>
-	<% end %>
+          </div> <!-- .list-group -->
+        </div> <!-- .panel-body -->
+      </div> <!-- .panel .panel-default -->
+      <% end %>
 
-</div>
-
-  </div>
-</div>
-
-
-<!-- Mains -->
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Mains</h3>
-  </div>
-  <div class="panel-body">
-    
-<div class="list-group">
-
-	<% @mainitems.each do |item| %>
-	<a href="#" class="list-group-item">
-	<div class="row">
-
-	
-	<div class="col-md-3">
-		<h5><%= item['name'] %></h5>
-	</div>
-
-	<div class="col-md-7">
-		<h5><small><%= item['description'] %></small></h5> 
-	</div>
-
-	<div class="col-md-2 text-right">
-		<h5>$<%= sprintf('%.2f', item['price']) %></h5>
-	</div>
-	
-   </div>
-	</a>
-	<% end %>
-
-</div>
-
-  </div>
-</div>
-
-<!-- Beverages -->
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Beverages</h3>
-  </div>
-  <div class="panel-body">
-    
-<div class="list-group">
-
-	<% @bevitems.each do |item| %>
-	<a href="#" class="list-group-item">
-	<div class="row">
-
-	
-	<div class="col-md-3">
-		<h5><%= item['name'] %></h5>
-	</div>
-
-	<div class="col-md-7">
-		<h5><small><%= item['description'] %></small></h5> 
-	</div>
-
-	<div class="col-md-2 text-right">
-		<h5>$<%= sprintf('%.2f', item['price']) %></h5>
-	</div>
-	
-   </div>
-	</a>
-	<% end %>
-
-</div>
-
-  </div>
-</div>
+    </div> <!-- .col-sm-8 .col-md-offset-1 -->
+  </div> <!-- .row -->
+  <!-- New version /-->
 
 
-
-	</div>
-</div>
-
-
-</div>
+</div> <!-- .container -->
 
 
 <script>
-	$("#addDo").validate();
+    $("#addOrder").validate();
 </script>
 
