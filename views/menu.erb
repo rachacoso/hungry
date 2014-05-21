@@ -2,41 +2,121 @@
 <div class="container">
 
 <div class="row">
-	<div class="col-md-11 col-md-offset-1">
+	<div class="col-sm-8 col-md-offset-1">
 		<h1>Menu</h1>
 	</div>
 </div>
 
 
 <div class="row">
-	<div class="col-md-11 col-md-offset-1">
+	<div class="col-sm-8 col-md-offset-1">
 
-Appetizers
-<ul>
+<!-- Appetizers -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Appetizers</h3>
+  </div>
+  <div class="panel-body">
+    
+<div class="list-group">
 
 	<% @appitems.each do |item| %>
-		<li> <%= item['name'] %>, <%= item['description'] %>, $<%= sprintf('%.2f', item['price']) %></li>
+	<a href="#" class="list-group-item">
+	<div class="row">
+
+	
+	<div class="col-md-3">
+		<h5><%= item['name'] %></h5>
+	</div>
+
+	<div class="col-md-7">
+		<h5><small><%= item['description'] %></small></h5> 
+	</div>
+
+	<div class="col-md-2 text-right">
+		<h5>$<%= sprintf('%.2f', item['price']) %></h5>
+	</div>
+	
+   </div>
+	</a>
 	<% end %>
 
-</ul>
+</div>
 
-Mains
-<ul>
+  </div>
+</div>
+
+
+<!-- Mains -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Mains</h3>
+  </div>
+  <div class="panel-body">
+    
+<div class="list-group">
 
 	<% @mainitems.each do |item| %>
-		<li> <%= item['name'] %>, <%= item['description'] %>, $<%= sprintf('%.2f', item['price']) %></li>
+	<a href="#" class="list-group-item">
+	<div class="row">
+
+	
+	<div class="col-md-3">
+		<h5><%= item['name'] %></h5>
+	</div>
+
+	<div class="col-md-7">
+		<h5><small><%= item['description'] %></small></h5> 
+	</div>
+
+	<div class="col-md-2 text-right">
+		<h5>$<%= sprintf('%.2f', item['price']) %></h5>
+	</div>
+	
+   </div>
+	</a>
 	<% end %>
 
-</ul>
+</div>
 
-Beverages
-<ul>
+  </div>
+</div>
+
+<!-- Beverages -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Beverages</h3>
+  </div>
+  <div class="panel-body">
+    
+<div class="list-group">
 
 	<% @bevitems.each do |item| %>
-		<li> <%= item['name'] %>, <%= item['description'] %>, $<%= sprintf('%.2f', item['price']) %></li>
+	<a href="#" class="list-group-item">
+	<div class="row">
+
+	
+	<div class="col-md-3">
+		<h5><%= item['name'] %></h5>
+	</div>
+
+	<div class="col-md-7">
+		<h5><small><%= item['description'] %></small></h5> 
+	</div>
+
+	<div class="col-md-2 text-right">
+		<h5>$<%= sprintf('%.2f', item['price']) %></h5>
+	</div>
+	
+   </div>
+	</a>
 	<% end %>
 
-</ul>
+</div>
+
+  </div>
+</div>
+
 
 
 	</div>

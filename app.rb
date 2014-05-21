@@ -29,12 +29,64 @@ orders_c = db['orders']
 # 	attr_accessor :first, :last
 # end
 
-# display menu
+
+# EDIT the menu
+
+get '/editmenu' do 
+
+	# get items by type
+	@appitems = menuitems_c.find({type: "appetizer"}).sort(:name)
+	@mainitems = menuitems_c.find({type: "main"}).sort(:name)
+	@bevitems = menuitems_c.find({type: "beverage"}).sort(:name)
+	erb :editmenu
+
+end
+
+post '/editmenu' do
+
+	wholeprice = params[:price_dollars] + '.' + params[:price_cents]
+
+	edititem = menuitems_c.find("_id" => BSON::ObjectId(params[:itemid])).first
+	edititem['name'] = params[:name]
+	edititem['description'] = params[:description]
+	edititem['price'] = wholeprice.to_f
+
+	menuitems_c.save(edititem)
+	redirect to('/editmenu') 
+
+end
+
+post '/addtomenu' do
+
+	wholeprice = params[:price_dollars] + '.' + params[:price_cents]
+
+	additem = Hash.new
+	additem['name'] = params[:name]
+	additem['description'] = params[:description]
+	additem['price'] = wholeprice.to_f
+	additem['type'] = params[:type]
+
+	menuitems_c.save(additem)
+
+	redirect_page = '/editmenu' + '#' + params[:type]
+	redirect to( redirect_page ) 
+
+end
+
+get '/deletemenu' do
+
+	menuitems_c.remove("_id" => BSON::ObjectId(params[:itemid]))
+	redirect to('/editmenu') 
+
+end
+
+
+# VIEW the menu
 get '/menu' do 
 
 	# get items by type
-	@appitems = menuitems_c.find({type: "appetizer"})
-	@mainitems = menuitems_c.find({type: "main"})
-	@bevitems = menuitems_c.find({type: "beverage"})
+	@appitems = menuitems_c.find({type: "appetizer"}).sort(:name)
+	@mainitems = menuitems_c.find({type: "main"}).sort(:name)
+	@bevitems = menuitems_c.find({type: "beverage"}).sort(:name)
 	erb :menu
 end

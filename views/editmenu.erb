@@ -1,0 +1,459 @@
+
+<div class="container">
+
+<div class="row">
+	<div class="col-sm-8 col-md-offset-1">
+		<h1>Edit Menu <small> - select an item to edit</small></h1>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-sm-8 col-md-offset-1">
+
+<!-- Appetizers -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+
+    <h3 id="appetizer" class="panel-title">Appetizers <small class="pull-right"><a data-toggle="modal" href="#modal_addapp">add item</a></small></h3>
+
+	<!-- Add Modal -->
+	<div class="modal fade" id="modal_addapp" tabindex="-1" role="dialog" aria-labelledby="modal_addappLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="modal_addappLabel">Add Appetizer</h4>
+            </div>
+            <form class="form-horizontal" id="editMenu" role="form" action="/addtomenu" method="POST">
+            <input type="hidden" name="type" value="appetizer">
+            <div class="modal-body">
+
+            	
+
+				  <div class="form-group">
+				    <label for="name" class="col-sm-2 control-label">Name</label>
+				    <div class="col-sm-10">
+						<input type="text" name="name" id="name" class="form-control" placeholder="Name" required>			
+				    </div>
+				  </div>
+	
+				  <div class="form-group">
+				    <label for="description" class="col-sm-2 control-label">Description</label>
+				    <div class="col-sm-10">
+						<input type="text" name="description" id="description" class="form-control" placeholder="Description" required>			
+				    </div>
+				  </div>
+
+				  <div class="form-group">
+				    <label for="price_dollars" class="col-sm-2 control-label">Price</label>
+				    	<div class="row">
+						<div class="col-sm-2"><input type="text" name="price_dollars" id="price_dollars" class="form-control price" placeholder="00"></div><div class="col-sm-2 text-left"><small>dollars</small></div>
+						<div class="col-sm-2"><input type="text" name="price_cents" class="form-control price" placeholder="00"></div> <div class="col-sm-2 text-left"><small>cents</small></div>	
+					    </div>
+				  </div>
+				
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <input type="submit" class="btn btn-primary" value="Add Appetizer">
+	        </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+	<!-- Add Modal  /-->
+
+  </div>
+  <div class="panel-body">
+    
+<div class="list-group">
+
+	<% @appitems.each do |item| %>
+	<a class="list-group-item" data-toggle="modal" href="#modal_<%= item['_id'] %>">
+	<div class="row">
+	
+	<div class="col-md-3">
+		<h5><%= item['name'] %></h5>
+	</div>
+
+	<div class="col-md-7">
+		<h5><small><%= item['description'] %></small></h5> 
+	</div>
+
+	<div class="col-md-2 text-right">
+		<h5>$<%= sprintf('%.2f', item['price']) %></h5>
+	</div>
+	<div class="col-md-2 text-right">
+	</div>
+   </div>
+	</a>
+
+	<!-- Edit/Delete Modal -->
+	<div class="modal fade" id="modal_<%= item['_id'] %>" tabindex="-1" role="dialog" aria-labelledby="modal_<%= item['_id'] %>Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            
+            <h4 class="modal-title" id="modal_<%= item['_id'] %>Label"><%= item['name'] %> </h4>
+	        
+            </div>
+            <form class="form-horizontal" id="editMenu" role="form" action="/editmenu" method="POST">
+            <input type="hidden" name="itemid" value="<%= item['_id'] %>">
+            <div class="modal-body">
+
+            	
+
+				  <div class="form-group">
+				    <label for="name" class="col-sm-2 control-label">Name</label>
+				    <div class="col-sm-10">
+						<input type="text" name="name" id="name" class="form-control" value="<%= item['name'] %>" required>			
+				    </div>
+				  </div>
+	
+				  <div class="form-group">
+				    <label for="description" class="col-sm-2 control-label">Description</label>
+				    <div class="col-sm-10">
+						<input type="text" name="description" id="description" class="form-control" value="<%= item['description'] %>" required>			
+				    </div>
+				  </div>
+
+				  <div class="form-group">
+				    <label for="price_dollars" class="col-sm-2 control-label">Price</label>
+				    	<div class="row">
+						<div class="col-sm-2"><input type="text" name="price_dollars" id="price_dollars" class="form-control price" value="<%= sprintf('%.2f', item['price']).split('.')[0] %>"></div><div class="col-sm-2 text-left"><small>dollars</small></div>
+						<div class="col-sm-2"><input type="text" name="price_cents" class="form-control price" value="<%= sprintf('%.2f', item['price']).split('.')[1] %>"></div> <div class="col-sm-2 text-left"><small>cents</small></div>	
+					    </div>
+				  </div>
+				
+
+
+            </div>
+            <div class="modal-footer">
+            	<a href="/deletemenu?itemid=<%= item['_id'] %>" class="btn btn-danger pull-left" role="button">Delete Item</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <input type="submit" class="btn btn-primary" value="Save Changes">
+	        </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+	<!-- Edit/Delete Modal  /-->
+
+	<% end %>
+
+</div>
+
+  </div>
+</div>
+
+
+<!-- Mains -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 id="main" class="panel-title">Mains <small class="pull-right"><a data-toggle="modal" href="#modal_addmain">add item</a></small></h3>
+
+	<!-- Add Modal -->
+	<div class="modal fade" id="modal_addmain" tabindex="-1" role="dialog" aria-labelledby="modal_addmainLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="modal_addmainLabel">Add Main</h4>
+            </div>
+            <form class="form-horizontal" id="editMenu" role="form" action="/addtomenu" method="POST">
+            <input type="hidden" name="type" value="main">
+            <div class="modal-body">
+
+            	
+
+				  <div class="form-group">
+				    <label for="name" class="col-sm-2 control-label">Name</label>
+				    <div class="col-sm-10">
+						<input type="text" name="name" id="name" class="form-control" placeholder="Name" required>			
+				    </div>
+				  </div>
+	
+				  <div class="form-group">
+				    <label for="description" class="col-sm-2 control-label">Description</label>
+				    <div class="col-sm-10">
+						<input type="text" name="description" id="description" class="form-control" placeholder="Description" required>			
+				    </div>
+				  </div>
+
+				  <div class="form-group">
+				    <label for="price_dollars" class="col-sm-2 control-label">Price</label>
+				    	<div class="row">
+						<div class="col-sm-2"><input type="text" name="price_dollars" id="price_dollars" class="form-control price" placeholder="00"></div><div class="col-sm-2 text-left"><small>dollars</small></div>
+						<div class="col-sm-2"><input type="text" name="price_cents" class="form-control price" placeholder="00"></div> <div class="col-sm-2 text-left"><small>cents</small></div>	
+					    </div>
+				  </div>
+				
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <input type="submit" class="btn btn-primary" value="Add Main">
+	        </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+	<!-- Add Modal  /-->
+
+  </div>
+  <div class="panel-body">
+    
+<div class="list-group">
+
+	<% @mainitems.each do |item| %>
+	<a class="list-group-item" data-toggle="modal" href="#modal_<%= item['_id'] %>">
+	<div class="row">
+	
+	<div class="col-md-3">
+		<h5><%= item['name'] %></h5>
+	</div>
+
+	<div class="col-md-7">
+		<h5><small><%= item['description'] %></small></h5> 
+	</div>
+
+	<div class="col-md-2 text-right">
+		<h5>$<%= sprintf('%.2f', item['price']) %></h5>
+	</div>
+	<div class="col-md-2 text-right">
+	</div>
+   </div>
+	</a>
+
+	<!-- Edit/Delete Modal -->
+	<div class="modal fade" id="modal_<%= item['_id'] %>" tabindex="-1" role="dialog" aria-labelledby="modal_<%= item['_id'] %>Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            
+            <h4 class="modal-title" id="modal_<%= item['_id'] %>Label"><%= item['name'] %> </h4>
+	        
+            </div>
+            <form class="form-horizontal" id="editMenu" role="form" action="/editmenu" method="POST">
+            <input type="hidden" name="itemid" value="<%= item['_id'] %>">
+            <div class="modal-body">
+
+            	
+
+				  <div class="form-group">
+				    <label for="name" class="col-sm-2 control-label">Name</label>
+				    <div class="col-sm-10">
+						<input type="text" name="name" id="name" class="form-control" value="<%= item['name'] %>" required>			
+				    </div>
+				  </div>
+	
+				  <div class="form-group">
+				    <label for="description" class="col-sm-2 control-label">Description</label>
+				    <div class="col-sm-10">
+						<input type="text" name="description" id="description" class="form-control" value="<%= item['description'] %>" required>			
+				    </div>
+				  </div>
+
+				  <div class="form-group">
+				    <label for="price_dollars" class="col-sm-2 control-label">Price</label>
+				    	<div class="row">
+						<div class="col-sm-2"><input type="text" name="price_dollars" id="price_dollars" class="form-control price" value="<%= sprintf('%.2f', item['price']).split('.')[0] %>"></div><div class="col-sm-2 text-left"><small>dollars</small></div>
+						<div class="col-sm-2"><input type="text" name="price_cents" class="form-control price" value="<%= sprintf('%.2f', item['price']).split('.')[1] %>"></div> <div class="col-sm-2 text-left"><small>cents</small></div>	
+					    </div>
+				  </div>
+				
+
+
+            </div>
+            <div class="modal-footer">
+            	<a href="/deletemenu?itemid=<%= item['_id'] %>" class="btn btn-danger pull-left" role="button">Delete Item</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <input type="submit" class="btn btn-primary" value="Save Changes">
+	        </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+	<!-- Edit/Delete Modal  /-->
+
+	<% end %>
+
+</div>
+
+  </div>
+</div>
+
+<!-- Beverages -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 id="beverage" class="panel-title">Beverages  <small class="pull-right"><a data-toggle="modal" href="#modal_addbev">add item</a></small></h3>
+
+	<!-- Add Modal -->
+	<div class="modal fade" id="modal_addbev" tabindex="-1" role="dialog" aria-labelledby="modal_addbevLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="modal_addbevLabel">Add Beverage</h4>
+            </div>
+            <form class="form-horizontal" id="editMenu" role="form" action="/addtomenu" method="POST">
+            <input type="hidden" name="type" value="beverage">
+            <div class="modal-body">
+
+            	
+
+				  <div class="form-group">
+				    <label for="name" class="col-sm-2 control-label">Name</label>
+				    <div class="col-sm-10">
+						<input type="text" name="name" id="name" class="form-control" placeholder="Name" required>			
+				    </div>
+				  </div>
+	
+				  <div class="form-group">
+				    <label for="description" class="col-sm-2 control-label">Description</label>
+				    <div class="col-sm-10">
+						<input type="text" name="description" id="description" class="form-control" placeholder="Description" required>			
+				    </div>
+				  </div>
+
+				  <div class="form-group">
+				    <label for="price_dollars" class="col-sm-2 control-label">Price</label>
+				    	<div class="row">
+						<div class="col-sm-2"><input type="text" name="price_dollars" id="price_dollars" class="form-control price" placeholder="00"></div><div class="col-sm-2 text-left"><small>dollars</small></div>
+						<div class="col-sm-2"><input type="text" name="price_cents" class="form-control price" placeholder="00"></div> <div class="col-sm-2 text-left"><small>cents</small></div>	
+					    </div>
+				  </div>
+				
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <input type="submit" class="btn btn-primary" value="Add Beverage">
+	        </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+	<!-- Add Modal  /-->
+
+
+  </div>
+  <div class="panel-body">
+    
+<div class="list-group">
+
+	<% @bevitems.each do |item| %>
+	<a class="list-group-item" data-toggle="modal" href="#modal_<%= item['_id'] %>">
+	<div class="row">
+	
+	<div class="col-md-3">
+		<h5><%= item['name'] %></h5>
+	</div>
+
+	<div class="col-md-7">
+		<h5><small><%= item['description'] %></small></h5> 
+	</div>
+
+	<div class="col-md-2 text-right">
+		<h5>$<%= sprintf('%.2f', item['price']) %></h5>
+	</div>
+	<div class="col-md-2 text-right">
+	</div>
+   </div>
+	</a>
+
+	<!-- Edit/Delete Modal -->
+	<div class="modal fade" id="modal_<%= item['_id'] %>" tabindex="-1" role="dialog" aria-labelledby="modal_<%= item['_id'] %>Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            
+            <h4 class="modal-title" id="modal_<%= item['_id'] %>Label"><%= item['name'] %> </h4>
+	        
+            </div>
+            <form class="form-horizontal" id="editMenu" role="form" action="/editmenu" method="POST">
+            <input type="hidden" name="itemid" value="<%= item['_id'] %>">
+            <div class="modal-body">
+
+            	
+
+				  <div class="form-group">
+				    <label for="name" class="col-sm-2 control-label">Name</label>
+				    <div class="col-sm-10">
+						<input type="text" name="name" id="name" class="form-control" value="<%= item['name'] %>" required>			
+				    </div>
+				  </div>
+	
+				  <div class="form-group">
+				    <label for="description" class="col-sm-2 control-label">Description</label>
+				    <div class="col-sm-10">
+						<input type="text" name="description" id="description" class="form-control" value="<%= item['description'] %>" required>			
+				    </div>
+				  </div>
+
+				  <div class="form-group">
+				    <label for="price_dollars" class="col-sm-2 control-label">Price</label>
+				    	<div class="row">
+						<div class="col-sm-2"><input type="text" name="price_dollars" id="price_dollars" class="form-control price" value="<%= sprintf('%.2f', item['price']).split('.')[0] %>"></div><div class="col-sm-2 text-left"><small>dollars</small></div>
+						<div class="col-sm-2"><input type="text" name="price_cents" class="form-control price" value="<%= sprintf('%.2f', item['price']).split('.')[1] %>"></div> <div class="col-sm-2 text-left"><small>cents</small></div>	
+					    </div>
+				  </div>
+				
+
+
+            </div>
+            <div class="modal-footer">
+            	<a href="/deletemenu?itemid=<%= item['_id'] %>" class="btn btn-danger pull-left" role="button">Delete Item</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <input type="submit" class="btn btn-primary" value="Save Changes">
+	        </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+	<!-- Edit/Delete Modal  /-->
+
+	<% end %>
+
+</div>
+
+  </div>
+</div>
+
+
+
+	</div>
+</div>
+
+
+</div>
+
+
+<script>
+
+  $( document ).ready(function() {
+    
+	jQuery.validator.addClassRules({
+
+	  price: {
+	    required: true,
+	    digits: true,
+	    maxlength: 2
+
+	  }
+	});
+
+	$("#editMenu").validate();
+
+	});
+
+</script>
+
