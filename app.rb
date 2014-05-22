@@ -13,17 +13,21 @@ menuitems_c = db['menuitems']
 users_c = db['users']
 orders_c = db['orders']
 
-# class Menu
-# 	attr_accessor :
-# end
 
-# class MenuItem < Menu
 
-# end
+class Order
+	
+	attr_reader :items
 
-# class Order
-# 	attr_accessor :total, :
-# end
+	def initialize
+		@data = []
+	end
+
+	def add_item(item)
+		@data.push(item)
+	end
+
+end
 
 # class User
 # 	attr_accessor :first, :last
@@ -52,6 +56,14 @@ get '/menu' do
 
 	erb :menu
 end
+
+# ADD TO / CREATE order
+post '/addtoorder' do 
+
+
+
+end
+
 
 # EDIT the menu
 
@@ -107,9 +119,12 @@ end
 
 get '/deletemenu' do
 
-	menuitems_c.remove("_id" => BSON::ObjectId(params[:itemid]))
-	
-	redirect_page = '/editmenu' + '#' + params[:type]
-	redirect to( redirect_page ) 
+	if params[:itemid]
+		menuitems_c.remove("_id" => BSON::ObjectId(params[:itemid]))
+		redirect_page = '/editmenu' + '#' + params[:type]
+		redirect to( redirect_page ) 
+	else 
+		redirect to('/editmenu')
+	end
 end
 

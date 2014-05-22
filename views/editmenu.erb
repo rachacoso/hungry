@@ -100,7 +100,7 @@
 
 				            <form class="form-horizontal" id="editMenu" role="form" action="/editmenu" method="POST">
 				            <input type="hidden" name="itemid" value="<%= item['_id'] %>">
-
+										<input type="hidden" name="type" value="<%= k.downcase[0..-2] %>">
 				            <div class="modal-body">
 
 										  <div class="form-group">

@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <!-- New version -->
+  <!-- Loop through each Type -->
   <div class="row">
     <div class="col-sm-8 col-md-offset-1">
       <% @allitems.each do |k, v| %>
@@ -44,6 +44,9 @@
                     <h3><small> <%= item['description'] %></small> </h3>
                   </div>
                   <form class="form-horizontal" id="addOrder" role="form" action="/addtoorder" method="POST">
+                    <% if item['orderid'] %>
+                      <input type="hidden" name="orderid" value="<%= item['orderid'] %>"
+                    <% end %>
                     <input type="hidden" name="itemid" value="<%= item['_id'] %>">
                     <div class="modal-body">
                       <div class="form-group">
@@ -77,7 +80,7 @@
 
     </div> <!-- .col-sm-8 .col-md-offset-1 -->
   </div> <!-- .row -->
-  <!-- New version /-->
+  <!-- Loop through each Type /-->
 
 
 </div> <!-- .container -->
