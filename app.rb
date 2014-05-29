@@ -4,6 +4,27 @@ require 'mongo'
 
 include Mongo # add Mongo namespace
 
+enable :sessions
+
+
+#cookies test
+get '/foo' do
+	session['m'] = 'Hello World!'
+	if session['order']
+		session['order'] = session['order'] + ', and another'
+	else 
+		session['order'] = 'New Order'
+	end
+
+	redirect '/bar'
+end
+
+get '/bar' do
+	session['m']   # => 'Hello World!'
+	session['order']
+end
+
+
 
 
 # for local access
@@ -16,7 +37,7 @@ orders_c = db['orders']
 
 
 class Order
-	
+
 	attr_reader :items
 
 	def initialize
@@ -42,23 +63,27 @@ end
 # VIEW the menu
 get '/menu' do 
 
-	# get items by type
-	@appitems = menuitems_c.find({type: "appetizer"}).sort(:name)
-	@mainitems = menuitems_c.find({type: "main"}).sort(:name)
-	@dessitems = menuitems_c.find({type: "dessert"}).sort(:name)
-	@bevitems = menuitems_c.find({type: "beverage"}).sort(:name)
+	# if session['order'] # if order already exists
+	# 	@order_in_progress = orders_c.find("_id" => BSON::ObjectId(params[session['order']])).first
+	# end
 
+
+	# get items by type
 	@allitems = Hash.new
-	@allitems['Appetizers'] = @appitems
-	@allitems['Mains'] = @mainitems
-	@allitems['Desserts'] = @dessitems
-	@allitems['Beverages'] = @bevitems
+
+	@allitems['Appetizers'] = menuitems_c.find({type: "appetizer"}).sort(:name)
+	@allitems['Mains'] = menuitems_c.find({type: "main"}).sort(:name)
+	@allitems['Desserts'] = menuitems_c.find({type: "dessert"}).sort(:name)
+	@allitems['Beverages'] = menuitems_c.find({type: "beverage"}).sort(:name)
 
 	erb :menu
 end
 
 # ADD TO / CREATE order
 post '/addtoorder' do 
+	# if session['order'] #if order already exists
+
+	# end
 
 
 
@@ -69,17 +94,13 @@ end
 
 get '/editmenu' do 
 
-	# get items by type
-	@appitems = menuitems_c.find({type: "appetizer"}).sort(:name)
-	@mainitems = menuitems_c.find({type: "main"}).sort(:name)
-	@dessitems = menuitems_c.find({type: "dessert"}).sort(:name)
-	@bevitems = menuitems_c.find({type: "beverage"}).sort(:name)
-
 	@allitems = Hash.new
-	@allitems['Appetizers'] = @appitems
-	@allitems['Mains'] = @mainitems
-	@allitems['Desserts'] = @dessitems
-	@allitems['Beverages'] = @bevitems
+	# get items by type
+	@allitems['Appetizers'] = menuitems_c.find({type: "appetizer"}).sort(:name)
+	@allitems['Mains'] = menuitems_c.find({type: "main"}).sort(:name)
+	@allitems['Desserts'] = menuitems_c.find({type: "dessert"}).sort(:name)
+	@allitems['Beverages'] = menuitems_c.find({type: "beverage"}).sort(:name)
+
 	erb :editmenu
 
 end
