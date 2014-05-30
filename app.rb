@@ -46,6 +46,11 @@ users_c = db['users']
 orders_c = db['orders']
 
 
+class Hash
+  def except(which)
+    self.tap{ |h| h.delete(which) }
+  end
+end
 
 # class Order
 
@@ -91,17 +96,14 @@ get '/menu' do
 	if session['order'] # if order already exists output hash with Item name and Quantity
 		@order_in_progress = Hash.new
 		@order_total = 0
-		puts @order_in_progress
-		# puts session['order']
 		items_list = orders_c.find( "_id" => BSON::ObjectId(session['order'].to_s) ).first
 		items_list.each do |k,v|
 			next if k == '_id'
 			this_item = menuitems_c.find( "_id" => BSON::ObjectId(k) ).first
 			item_price_total = v * this_item['price']
-			@order_in_progress[this_item['name']] = [ v.to_s , this_item['price'] ,  item_price_total.to_f]
+			@order_in_progress[this_item['name']] = [ v.to_s , this_item['price'] ,  item_price_total.to_f , k ]
 			@order_total += item_price_total.to_f
 		end
-		puts @order_in_progress
 	end
 
 	erb :menu
@@ -129,6 +131,26 @@ post '/addtoorder' do
 	redirect '/menu'
 end
 
+# EDIT order
+get '/deleteorderitem' do
+
+	if params[:itemid]
+		order_in_progress = orders_c.find("_id" => BSON::ObjectId(session['order'].to_s)).first # get order
+		order_in_progress.except(params[:itemid])
+		orders_c.save(order_in_progress) # save order
+
+
+		if order_in_progress.length <= 1 # delete order if no more items in it and reset cookie
+			orders_c.remove("_id" => BSON::ObjectId(session['order'].to_s))
+			session['order'] = nil
+		end
+
+	end
+
+
+	redirect to('/menu')
+
+end
 
 # EDIT the menu
 

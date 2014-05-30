@@ -93,15 +93,20 @@
           <ul class="list-group">
             <% @order_in_progress.each do |k, v| %>
               <li class="list-group-item"> 
-                <h5 class="text-right list-group-item-heading"><small><%= v[0] %> x</small> <%= k %>  <small>@ $<%= sprintf('%.2f', v[1]) %> =</small> $<%= sprintf('%.2f', v[2]) %></h5> 
+                <h5 class="text-right list-group-item-heading"><small><%= v[0] %> x</small> <%= k %>  <small>@ $<%= sprintf('%.2f', v[1]) %> =</small> $<%= sprintf('%.2f', v[2]) %> <a href="/deleteorderitem?itemid=<%= v[3] %> "><span style="color: red;" class="glyphicon glyphicon-remove-circle"></span></a></h5> 
               </li>
             <% end %>
             <li class="list-group-item text-right"> <h5 class="list-group-item-heading">Total : $<%= sprintf('%.2f', @order_total) %></h5></li>
           </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+          <a href="/completeorder" class="btn btn-info pull-right" role="button">Complete Order</a>
+        </div> <!-- .panel-body -->
+      </div> <!-- .panel .panel-info -->
+    </div> <!-- .col-sm-5 -->
+  </div> <!-- .row -->
+
+
+
+
   <% end %>
 
 
