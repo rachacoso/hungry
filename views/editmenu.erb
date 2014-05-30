@@ -2,16 +2,16 @@
 <div class="container">
 
 	<div class="row">
-		<div class="col-sm-8 col-md-offset-1">
+		<div class="col-sm-7">
 			<h1>Edit Menu <small> - select an item to edit</small></h1>
 		</div>
 	</div>
 
 	<div class="row">
-		<div class="col-sm-8 col-md-offset-1">
+		<div class="col-sm-7">
 
 			<% @allitems.each do |k, v| %>
-				<div class="panel panel-default">
+				<div class="panel panel-success">
 
 					<div class="panel-heading">
 						<h3 id="<%= k.downcase[0..-2] %>" class="panel-title"><%= k %> <small class="pull-right"><a data-toggle="modal" href="#modal_add_<%= k %>">add item</a></small></h3>
