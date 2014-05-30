@@ -10,11 +10,12 @@ enable :sessions
 #cookies test
 get '/foo' do
 	session['m'] = 'Hello World!'
-	if session['order']
-		session['order'] = session['order'] + ', and another'
-	else 
-		session['order'] = 'New Order'
-	end
+	session['order'] = 'this is an order'
+	# if session['ordertest']
+	# 	session['ordertest'] = session['ordertest'] + ', and another'
+	# else 
+	# 	session['ordertest'] = 'New Order'
+	# end
 
 	redirect '/bar'
 end
@@ -22,8 +23,18 @@ end
 get '/bar' do
 	session['m']   # => 'Hello World!'
 	session['order']
+	# session['ordertest']
+	# if session['order']
+	# 	session['order']
+	# end
+	# session['order']
 end
 
+get '/resetcookie' do
+	session['order'] = nil
+	session['m'] = nil
+	redirect '/menu'
+end
 
 
 
@@ -36,19 +47,19 @@ orders_c = db['orders']
 
 
 
-class Order
+# class Order
 
-	attr_reader :items
+# 	attr_reader :items
 
-	def initialize
-		@data = []
-	end
+# 	def initialize
+# 		@data = []
+# 	end
 
-	def add_item(item)
-		@data.push(item)
-	end
+# 	def add_item(item)
+# 		@data.push(item)
+# 	end
 
-end
+# end
 
 # class User
 # 	attr_accessor :first, :last
@@ -63,30 +74,59 @@ end
 # VIEW the menu
 get '/menu' do 
 
-	# if session['order'] # if order already exists
-	# 	@order_in_progress = orders_c.find("_id" => BSON::ObjectId(params[session['order']])).first
-	# end
+
 
 
 	# get items by type
 	@allitems = Hash.new
+	all_allitems = Hash.new
 
 	@allitems['Appetizers'] = menuitems_c.find({type: "appetizer"}).sort(:name)
 	@allitems['Mains'] = menuitems_c.find({type: "main"}).sort(:name)
 	@allitems['Desserts'] = menuitems_c.find({type: "dessert"}).sort(:name)
 	@allitems['Beverages'] = menuitems_c.find({type: "beverage"}).sort(:name)
 
+	all_allitems = menuitems_c.find()
+	
+	if session['order'] # if order already exists output hash with Item name and Quantity
+		@order_in_progress = Hash.new
+		@order_total = 0
+		puts @order_in_progress
+		# puts session['order']
+		items_list = orders_c.find( "_id" => BSON::ObjectId(session['order'].to_s) ).first
+		items_list.each do |k,v|
+			next if k == '_id'
+			this_item = menuitems_c.find( "_id" => BSON::ObjectId(k) ).first
+			item_price_total = v * this_item['price']
+			@order_in_progress[this_item['name']] = [ v.to_s , this_item['price'] ,  item_price_total.to_f]
+			@order_total += item_price_total.to_f
+		end
+		puts @order_in_progress
+	end
+
 	erb :menu
 end
 
 # ADD TO / CREATE order
 post '/addtoorder' do 
-	# if session['order'] #if order already exists
+	if session['order'] #if order already exists
+		order_in_progress = orders_c.find("_id" => BSON::ObjectId(session['order'].to_s)).first
+		if order_in_progress[params[:itemid]] #if item already is in order
+			order_in_progress[params[:itemid]] += params[:quantity].to_i
+		else	#if item is not yet in order
+			order_in_progress[params[:itemid]] = params[:quantity].to_i
+		end
 
-	# end
+		orders_c.save(order_in_progress)
 
+	else
 
+		order_thing = { params[:itemid] => params[:quantity].to_i }
+		new_orderid = orders_c.insert ( order_thing )
+		session['order'] = new_orderid # make cookie the order ID
+	end
 
+	redirect '/menu'
 end
 
 
