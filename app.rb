@@ -108,12 +108,16 @@ get '/menu' do
 		@order_in_progress = Hash.new
 		@order_total = 0
 		items_list = orders_c.find( "_id" => BSON::ObjectId(session['order'].to_s) ).first
-		items_list.each do |k,v|
-			next if k == '_id'
-			this_item = menuitems_c.find( "_id" => BSON::ObjectId(k) ).first
-			item_price_total = v * this_item['price']
-			@order_in_progress[this_item['name']] = [ v.to_s , this_item['price'] ,  item_price_total.to_f , k ]
-			@order_total += item_price_total.to_f
+		if !items_list 
+			session['order'] = nil
+		else
+			items_list.each do |k,v|
+				next if k == '_id'
+				this_item = menuitems_c.find( "_id" => BSON::ObjectId(k) ).first
+				item_price_total = v * this_item['price']
+				@order_in_progress[this_item['name']] = [ v.to_s , this_item['price'] ,  item_price_total.to_f , k ]
+				@order_total += item_price_total.to_f
+			end
 		end
 	end
 
@@ -206,7 +210,6 @@ get '/vieworders' do
 
 	complete_orders = orders_c.find({ "complete" => { "$exists" => true }}) # find complete orders
 
-	puts complete_orders
 	@complete_orders_list = Array.new # arrray of orders for display
 	
 
@@ -223,9 +226,11 @@ get '/vieworders' do
 				this_order['recipient'] = [ v[0], v[1], v[2], v[3], v[4], v[5] ]
 			else # item info and order total
 				this_item = menuitems_c.find( "_id" => BSON::ObjectId(k) ).first
-				item_price_total = v * this_item['price']
-				this_order['items'] << [ this_item['name'], v.to_s , this_item['price'] ,  item_price_total.to_f ]
-				this_order['order_total'] += item_price_total.to_f
+				unless !this_item # skip if item has been removed from db
+					item_price_total = v * this_item['price']
+					this_order['items'] << [ this_item['name'], v.to_s , this_item['price'] ,  item_price_total.to_f ]
+					this_order['order_total'] += item_price_total.to_f
+				end
 			end
 		end
 
