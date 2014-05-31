@@ -3,7 +3,7 @@
 
   <div class="row">
     <div class="col-sm-8">
-      <h1>Menu</h1>
+      <h3 class="frontpage"><small><a href="/"><span class="glyphicon glyphicon-chevron-left"><span class="glyphicon glyphicon-home"></span></span></a></small> Hungry-natra</h3>      <h1>Menu</h1>
     </div>
   </div>
 
@@ -98,13 +98,85 @@
             <% end %>
             <li class="list-group-item text-right"> <h5 class="list-group-item-heading">Total : $<%= sprintf('%.2f', @order_total) %></h5></li>
           </ul>
-          <a href="/completeorder" class="btn btn-info pull-right" role="button">Complete Order</a>
+          
+          <a data-toggle="modal" href="#modal_completeorder" class="btn btn-info pull-right" role="button">Complete Order</a> 
+          
         </div> <!-- .panel-body -->
       </div> <!-- .panel .panel-info -->
     </div> <!-- .col-sm-5 -->
   </div> <!-- .row -->
 
+  <!-- Complete Order Modal -->
+  <div class="modal fade" id="modal_completeorder" tabindex="-1" role="dialog" aria-labelledby="modal_completeorder_Label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
 
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="modal_completeorder_Label">Complete Order - Delivery Address</h4>
+        </div>
+
+        <form class="form-horizontal" id="addOrder" role="form" action="/completeorder" method="POST">
+
+        <div class="modal-body">
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Name</label>
+            <div class="col-sm-9">
+              <input type="text" name="name" placeholder="Name" class="form-control">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Address 1</label>
+            <div class="col-sm-9">
+              <input type="text" name="address1" placeholder="Address Line 1" class="form-control">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">Address 2</label>
+            <div class="col-sm-9">
+              <input type="text" name="address2" placeholder="Address Line 2" class="form-control">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">City</label>
+            <div class="col-sm-9">
+              <input type="text" name="city" placeholder="City" class="form-control">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="textinput">State</label>
+            <div class="col-sm-3">
+              <input type="text" name="state" placeholder="State" maxlength="2" class="form-control">
+            </div>
+
+            <label class="col-sm-2 control-label" for="textinput">Zip</label>
+            <div class="col-sm-4">
+              <input type="number" name="zip" placeholder="Post Code" class="form-control">
+            </div>
+          </div>      
+
+        </div> <!-- .modal-body -->
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <input type="submit" class="btn btn-primary" value="Complete Order">
+        </div>
+
+        </form>
+    </div> <!-- .modal-content -->
+    </div> <!-- .modal-dialog -->
+  </div> <!-- .modal .fade -->
+  <!-- Complete Order Modal  /-->
 
 
   <% end %>

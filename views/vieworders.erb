@@ -1,0 +1,55 @@
+<div class="container">
+
+	<div class="row">
+		<div class="col-sm-7">
+			<h3 class="frontpage"><small><a href="/"><span class="glyphicon glyphicon-chevron-left"><span class="glyphicon glyphicon-home"></span></span></a></small> Hungry-natra</h3>
+			<h1>Orders Ready for Delivery</small></h1>
+		</div>
+	</div>
+
+	<% @complete_orders_list.each do |order| %>
+	  <div class="row">
+	    <div class="col-sm-10">
+	      <div class="panel panel-info">
+	        <div class="panel-heading">
+	          <h3 class="panel-title">Order placed at: <%= BSON::ObjectId(order['orderid'].to_s).generation_time %></h3>
+	        </div>
+
+            <div class="panel-body">
+	
+			<ul class="list-group">
+			  <li class="list-group-item list-group-item-info">Items Ordered</li>
+				<% order['items'].each do |v| %>
+					<li class="list-group-item"> <small><%= v[1] %> x</small> <%= v[0] %>  <small>@ $<%= sprintf('%.2f', v[2]) %> =</small> $<%= sprintf('%.2f', v[3]) %>  </li>
+				<% end %>
+			</ul>
+
+			<ul class="list-group">
+			  <li class="list-group-item list-group-item-info">Delivery Info</li>
+			  <li class="list-group-item"><h5 class="list-group-item-heading">Name</h5><p class="list-group-item-text"> <%= order['recipient'][0] %> </p></li>
+  			  <li class="list-group-item"><h5 class="list-group-item-heading">Address</h5><p class="list-group-item-text"> 
+  			  	<%= order['recipient'][1] %> <br>
+		        <% unless order['recipient'][2].empty? %>
+				<%=	order['recipient'][2] %><br>
+			    <% end %>
+			    <%= order['recipient'][3] %>, <%=	order['recipient'][4] %> <%=	order['recipient'][5] %>
+  			  </p></li>
+			</ul>
+
+
+			<ul class="list-group">
+			  <li class="list-group-item list-group-item-info">Order Total</li>
+			  <li class="list-group-item">$<%= sprintf('%.2f', order['order_total']) %></li>
+			</ul>
+		
+			<a href="/deleteorder?orderid=<%= order['orderid'] %>" class="btn btn-danger pull-right" role="button">Delete Order</a>
+
+	        </div> <!-- .panel-body -->
+
+	      </div> <!-- .panel .panel-info -->
+		</div> <!-- .col-sm-5 -->
+	</div> <!-- .row -->
+	<% end %>
+
+</div> <!-- .container -->
+
